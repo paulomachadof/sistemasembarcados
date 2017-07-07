@@ -128,7 +128,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
         digitalWrite(D0, LOW);
         EstadoSaida = '1';
     }
-    
+    //verifica se deve colocar nivel alto de tensão na saída D0:
     if (msg.equals("D"))
     {
         digitalWrite(D0, HIGH);
@@ -141,30 +141,11 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
         EstadoSaida2 = '1';
     }
 
-     if (msg.equals("D1"))
-    {
-        digitalWrite(D1, HIGH);
-        EstadoSaida2 = '0';
-    }
-
-     if (msg.equals("D2"))
-    {
-        digitalWrite(D2, HIGH);
-        EstadoSaida3 = '0';
-    }
-
      if (msg.equals("L2"))
     {
         digitalWrite(D2, LOW);
         EstadoSaida3 = '1';
     }
-    
-    if (msg.equals("D3"))
-    {
-        digitalWrite(D3, HIGH);
-        EstadoSaida4 = '0';
-    }
-    
       if (msg.equals("L3"))
     {
         digitalWrite(D3, LOW);
@@ -172,6 +153,21 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
     }
  
     //verifica se deve colocar nivel alto de tensão na saída D0:
+    if (msg.equals("D1"))
+    {
+        digitalWrite(D1, HIGH);
+        EstadoSaida2 = '0';
+    }
+    if (msg.equals("D2"))
+    {
+        digitalWrite(D2, HIGH);
+        EstadoSaida3 = '0';
+    }
+     if (msg.equals("D3"))
+    {
+        digitalWrite(D3, HIGH);
+        EstadoSaida4 = '0';
+    }
 }
   
 //Função: reconecta-se ao broker MQTT (caso ainda não esteja conectado ou em caso de a conexão cair)
