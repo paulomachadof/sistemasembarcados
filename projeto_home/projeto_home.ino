@@ -110,72 +110,67 @@ void initMQTT()
 //Retorno: nenhum
 void mqtt_callback(char* topic, byte* payload, unsigned int length) 
 {
-    String msg, msg2, msg3, msg4;
+    String msg;
  
     //obtem a string do payload recebido
     for(int i = 0; i < length; i++) 
     {
        char c = (char)payload[i];
        msg += c;
-       char c1 = (char)payload[i];
-       msg2 += c1;
-       char c2 = (char)payload[i];
-       msg3 += c2;
-       char c3 = (char)payload[i];
-       msg4 += c3;
     }
    
     //toma ação dependendo da string recebida:
     //verifica se deve colocar nivel alto de tensão na saída D0:
     //IMPORTANTE: o Led já contido na placa é acionado com lógica invertida (ou seja,
     //enviar HIGH para o output faz o Led apagar / enviar LOW faz o Led acender)
-    if (msg.equals("L"))
+    if (topic == TOPICO_SUBSCRIBE)
     {
-        digitalWrite(D0, LOW);
-        EstadoSaida = '1';
-    }
-    //verifica se deve colocar nivel alto de tensão na saída D0:
-    if (msg.equals("D"))
-    {
-        digitalWrite(D0, HIGH);
-        EstadoSaida = '0';
-    } 
-
-     if (msg2.equals("L1"))
-    {
-        digitalWrite(D1, LOW);
-        EstadoSaida2 = '1';
+        if(msg == "L"){
+          digitalWrite(D0, LOW);
+          EstadoSaida = '1';
+        }
+        else if(msg == "D"){
+          digitalWrite(D0, HIGH);
+          EstadoSaida = '0';
+        }
     }
 
-     if (msg3.equals("L2"))
+    if (topic == TOPICO_SUBSCRIBE2)
     {
-        digitalWrite(D2, LOW);
-        EstadoSaida3 = '1';
+        if(msg == "L"){
+          digitalWrite(D1, LOW);
+          EstadoSaida2 = '1';
+        }
+        else if(msg == "D"){
+          digitalWrite(D1, HIGH);
+          EstadoSaida2 = '0';
+        }
     }
-      if (msg4.equals("L3"))
+
+     if (topic == TOPICO_SUBSCRIBE3)
     {
-        digitalWrite(D3, LOW);
-        EstadoSaida4 = '1';
+        if(msg == "L"){
+          digitalWrite(D2, LOW);
+          EstadoSaida3 = '1';
+        }
+        else if(msg == "D"){
+          digitalWrite(D2, HIGH);
+          EstadoSaida3 = '0';
+        }
     }
- 
-    //verifica se deve colocar nivel alto de tensão na saída D0:
-    if (msg2.equals("D1"))
+
+    if (topic == TOPICO_SUBSCRIBE4)
     {
-        digitalWrite(D1, HIGH);
-        EstadoSaida2 = '0';
-    }
-    if (msg3.equals("D2"))
-    {
-        digitalWrite(D2, HIGH);
-        EstadoSaida3 = '0';
-    }
-     if (msg4.equals("D3"))
-    {
-        digitalWrite(D3, HIGH);
-        EstadoSaida4 = '0';
+        if(msg == "L"){
+          digitalWrite(D3, LOW);
+          EstadoSaida4 = '1';
+        }
+        else if(msg == "D"){
+          digitalWrite(D3, HIGH);
+          EstadoSaida4 = '0';
+        }
     }
 }
-  
 //Função: reconecta-se ao broker MQTT (caso ainda não esteja conectado ou em caso de a conexão cair)
 //        em caso de sucesso na conexão ou reconexão, o subscribe dos tópicos é refeito.
 //Parâmetros: nenhum
@@ -255,22 +250,22 @@ void EnviaEstadoOutputMQTT(void)
       MQTT.publish(TOPICO_PUBLISH, "L");
 
     if (EstadoSaida2 == '0')
-      MQTT.publish(TOPICO_PUBLISH2, "D1");
+      MQTT.publish(TOPICO_PUBLISH2, "D");
  
     if (EstadoSaida2 == '1')
-      MQTT.publish(TOPICO_PUBLISH2, "L1");
+      MQTT.publish(TOPICO_PUBLISH2, "L");
 
     if (EstadoSaida3 == '0')
-      MQTT.publish(TOPICO_PUBLISH3, "D2");
+      MQTT.publish(TOPICO_PUBLISH3, "D");
  
     if (EstadoSaida3 == '1')
-      MQTT.publish(TOPICO_PUBLISH3, "L2");
+      MQTT.publish(TOPICO_PUBLISH3, "L");
     
     if (EstadoSaida4 == '0')
-      MQTT.publish(TOPICO_PUBLISH4, "D3");
+      MQTT.publish(TOPICO_PUBLISH4, "D");
  
     if (EstadoSaida4 == '1')
-      MQTT.publish(TOPICO_PUBLISH4, "L3"); 
+      MQTT.publish(TOPICO_PUBLISH4, "L"); 
       
     Serial.println("- Estado da saida D0 enviado ao broker!");
     delay(1000);
